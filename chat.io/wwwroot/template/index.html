@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Clone</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Genel Ayarlar */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #262524;
+            color: #e0e0e0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .app {
+            display: flex;
+            width: 95%;
+            height: 95%;
+            max-width: 1200px;
+            background: #202c33;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Sol Kenar Çubuğu */
+        .left-bar {
+            width: 5%;
+            background-color: #111b21;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            color: #e0e0e0;
+        }
+
+        .left-bar .icon-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .left-bar i {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .left-bar i:hover {
+            color: #00a884;
+        }
+
+        /* Orta Bölüm */
+        .sidebar {
+            width: 30%;
+            background-color: #202c33;
+            border-right: 1px solid #444;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar header {
+            padding: 15px;
+            background-color: #2a2a2a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #444;
+        }
+
+        .search-bar {
+            padding: 10px;
+            background-color: #202c33;
+            border-bottom: 1px solid #444;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #444;
+            border-radius: 20px;
+            background-color: #111b21;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+
+        .search-bar input::placeholder {
+            color: #aaa;
+        }
+
+        .chat-list {
+            flex: 1;
+            overflow-y: auto;
+            background-color: #202c33;
+        }
+
+        .chat-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #444;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-item:hover {
+            background-color: #333;
+        }
+
+        .chat-item .avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #e0e0e0;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .chat-info {
+            flex: 1;
+        }
+
+        .chat-info h2 {
+            margin: 0;
+            font-size: 16px;
+            color: #e0e0e0;
+        }
+
+        .chat-info p {
+            margin: 0;
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        /* Sohbet Alanı */
+        .chat {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #262524;
+        }
+
+        .chat-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #111b21;
+            color: #e0e0e0;
+            font-size: 18px;
+            position: relative;
+        }
+
+        .chat-header .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #555;
+            margin-right: 10px;
+        }
+
+        .online-status {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            font-size: 12px;
+            transform: translateY(-50%);
+            color: lightgreen;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+            max-width: 70%;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .message.received {
+            background-color: #333;
+            align-self: flex-start;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.sent {
+            background-color: #1e88e5;
+            align-self: flex-end;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message .time {
+            margin-left: 8px;
+            font-size: 10px;
+            color: #aaa;
+        }
+
+        .message .tick {
+            width: 16px;
+            height: 16px;
+            margin-left: 5px;
+        }
+
+        /* Mesaj Giriş Alanı */
+        .chat-footer {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #202c33;
+        }
+
+        .chat-footer input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 20px;
+            margin-right: 10px;
+            background-color: #111b21;
+            color: #e0e0e0;
+        }
+
+        .chat-footer input::placeholder {
+            color: #aaa;
+        }
+
+        .chat-footer button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            background-color: #1e88e5;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .chat-footer button:hover {
+            background-color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sol Kenar Çubuğu -->
+        <aside class="left-bar">
+            <div class="icon-group">
+                <i class="fas fa-comments"></i>
+                <i class="fas fa-broadcast-tower"></i>
+                <i class="fas fa-circle-notch"></i>
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="icon-group">
+                <i class="fas fa-user-circle"></i>
+                <i class="fas fa-cog"></i>
+            </div>
+        </aside>
+
+        <!-- Orta Bölüm -->
+        <aside class="sidebar">
+            <header>
+                Chats
+                <i class="fas fa-pencil-alt"></i>
+            </header>
+            <div class="search-bar">
+                <input type="text" placeholder="Search or start a new chat">
+            </div>
+            <ul class="chat-list">
+                <li class="chat-item">
+                    <div class="avatar">J</div>
+                    <div class="chat-info">
+                        <h2>John Doe</h2>
+                        <p>Hey, how's it going?</p>
+                    </div>
+                    <div class="chat-time">10:30</div>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Sohbet Alanı -->
+        <main class="chat">
+            <header class="chat-header">
+                <div class="avatar">J</div>
+                <h2>John Doe</h2>
+                <span class="online-status">Online</span>
+            </header>
+            <div class="messages">
+                <div class="message received">
+                    Hello!
+                    <span class="time">10:10</span>
+                </div>
+                <div class="message sent">
+                    Hi there!
+                    <img src="tick.svg" alt="tick" class="tick">
+                    <span class="time">10:11</span>
+                </div>
+            </div>
+            <footer class="chat-footer">
+                <input type="text" placeholder="Type a message">
+                <button>Send</button>
+            </footer>
+        </main>
+    </div>
+</body>
+<script>
+    const input = document.querySelector('.chat-footer input');
+    const messages = document.querySelector('.messages');
+
+    document.querySelector('.chat-footer button').addEventListener('click', () => {
+        const text = input.value.trim();
+        if (text) {
+            const message = document.createElement('div');
+            message.className = 'message sent';
+            message.innerHTML = `${text} <img src="tick.svg" alt="tick" class="tick"><span class="time">${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>`;
+            messages.appendChild(message);
+            input.value = '';
+            messages.scrollTop = messages.scrollHeight;
+        }
+    });
+</script>
+</html>
